@@ -34,7 +34,21 @@
                 }
               };
             </script>
-           
+  <script src="https://propertycarduqast.z8.web.core.windows.net/aiconcierge.js"></script>
+           <script>
+      window.addEventListener("load", () => {
+        const widget = new PropertyCardWidget({
+          target: "property-card-target",
+          placeholderDelayMs: 500,
+          sourceType: "PROPERTYSEARCHAPPLET",
+        });
+        widget.init();
+
+        window.addEventListener("search-result", (event) => {
+          widget.updateFromRawResponse(event.detail);
+        });
+      });
+    </script>
   <style>
     :root{
       --bg:#0f172a;          /* slate-900 */
@@ -136,6 +150,14 @@
       .t-grid{grid-template-columns:1fr}
       .hero{padding:5rem 0 3rem}
     }
+    #property-card-section{
+        position: relative;
+        margin-top: 179px;
+        width: 520px;
+        max-height: 600px;
+        overflow-y: scroll;
+        z-index: 9999;
+      }
   </style>
 </head>
 <body>
@@ -186,6 +208,17 @@
       <aside  aria-label="Featured">
          <div id="target-chat-id" style="height: 460px;width: 700px;"></div>
       </aside>
+        <section id="property-card-section" class="glass rounded-2xl p-6 md:p-8">
+        <div class="flex items-center justify-between mb-4">
+          <div>
+            <p class="text-sm uppercase tracking-wide text-indigo-500 font-semibold">Matches</p>
+            <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Property Cards</h2>
+          </div>
+
+          <div class="text-sm text-gray-500" id="card-count"></div>
+        </div>
+        <div id="property-card-target"></div>
+      </section>
     </div>
   </section>
 
@@ -375,6 +408,7 @@
   </script>
 </body>
 </html>
+
 
 
 
