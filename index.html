@@ -14,6 +14,7 @@
  <!-- Include below scripts in Head or before closing Body tag. -->
   <script src="https://searchappletuqast.z8.web.core.windows.net/aiconcierge.js"></script>
   <script src="https://propertycarduqast.z8.web.core.windows.net/aiconcierge.js"></script>
+   <!-- <script src="./aiconcierge.js"></script> -->
   
               <script>
       window.onload = () => {
@@ -27,6 +28,10 @@
           });
           assistant.init();
           window.addEventListener("search-start", (e) => {
+            const section = document.getElementById("property-card-section");
+            if (section) {
+              section.style.display = "block";
+            }
             console.log("Third-party received search start:", e.detail);
           });
           window.addEventListener("search-result", (e) => {
@@ -39,6 +44,7 @@
     </script>
            <script>
       window.addEventListener("load", () => {
+        const cardSection = document.getElementById("property-card-section");
         const widget = new PropertyCardWidget({
           target: "property-card-target",
           placeholderDelayMs: 500,
@@ -46,8 +52,30 @@
         });
         widget.init();
 
+        const showSection = () => {
+          if (cardSection) {
+            cardSection.style.display = "block";
+          }
+        };
+
+        window.addEventListener("search-start", () => {
+          showSection();
+        });
+
         window.addEventListener("search-result", (event) => {
+          showSection();
           widget.updateFromRawResponse(event.detail);
+        });
+
+        document.addEventListener("click", (event) => {
+          if (!cardSection || cardSection.style.display === "none") {
+            return;
+          }
+          const path = event.composedPath ? event.composedPath() : [];
+          if (path.includes(cardSection)) {
+            return;
+          }
+          cardSection.style.display = "none";
         });
       });
     </script>
@@ -97,7 +125,7 @@
     .search{display:flex;gap:.6rem;margin-top:1.2rem;background:#0b1327;border:1px solid #1e293b;box-shadow:inset 0 0 0 1px #0b1224;border-radius:14px;padding:.5rem}
     .search input{flex:1;background:transparent;border:0;outline:0;color:var(--text);padding:.9rem;border-radius:10px}
     .search button{white-space:nowrap}
-    #target-search-applet{position:absolute; height: 350px;min-height: 350px;}
+    #target-search-applet{height: 350px;min-height: 350px;}
     .hero-card{background:linear-gradient(180deg,#0f1a33,#0b1226);border:1px solid #162033;border-radius:var(--radius-lg);padding:1rem;box-shadow:var(--shadow)}
     .stat{display:grid;grid-template-columns:1fr 1fr;gap:1rem;margin-top:6rem}
     .stat .box{background:#0b1327;border:1px solid #1e293b;border-radius:14px;padding:1rem}
@@ -152,13 +180,22 @@
       .t-grid{grid-template-columns:1fr}
       .hero{padding:5rem 0 3rem}
     }
-    #property-card-section{
+    .search-area {
         position: relative;
-        margin-top: 179px;
+        width: 100%;
+        max-width: 520px;
+      }
+    #property-card-section{
+        position: absolute;
+        top: calc(100% + -283px);
+        left: 0;
         width: 520px;
+        max-width: 100%;
         max-height: 600px;
-        overflow-y: scroll;
-        z-index: 9999;
+        overflow-y: auto;
+        z-index: 50;
+        padding-top: 0px;
+        display: none;
       }
   </style>
 </head>
@@ -193,7 +230,14 @@
         <h1>Discover homes you’ll love—buy, sell, or rent with confidence.</h1>
         <p class="lead">Showcase premium properties with a modern, fast, and responsive landing page. Built to convert visitors into inquiries.</p>
 
-         <div id="target-search-applet" class="w-full mx-auto md:mb-10"></div>
+         <div class="search-area">
+          <div id="target-search-applet" class="w-full mx-auto"></div>
+
+          <section id="property-card-section" class="glass rounded-2xl p-6 md:p-8">
+        
+        <div id="property-card-target"></div>
+      </section>
+        </div>
 
         <div class="stat">
           <div class="box">
@@ -210,17 +254,6 @@
       <aside  aria-label="Featured">
          <div id="target-chat-id" style="height: 460px;width: 700px;"></div>
       </aside>
-        <section id="property-card-section" class="glass rounded-2xl p-6 md:p-8">
-        <div class="flex items-center justify-between mb-4">
-          <div>
-            <p class="text-sm uppercase tracking-wide text-indigo-500 font-semibold">Matches</p>
-            <h2 class="text-xl md:text-2xl font-semibold text-gray-900">Property Cards</h2>
-          </div>
-
-          <div class="text-sm text-gray-500" id="card-count"></div>
-        </div>
-        <div id="property-card-target"></div>
-      </section>
     </div>
   </section>
 
@@ -410,7 +443,6 @@
   </script>
 </body>
 </html>
-
 
 
 
