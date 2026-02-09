@@ -13,28 +13,30 @@
   
  <!-- Include below scripts in Head or before closing Body tag. -->
             <script src="https://searchappletuprodst.z8.web.core.windows.net//aiconcierge.js"></script>
-            <script>
-              window.onload = () => {
-                if (window.Assistant) {
-                  const assistant = new Assistant({
-                    target: "target-search-applet", // Use this id to render search applet
-                    brandId: "b4b3eda6-b3a7-4947-935a-5b0a1c2f7b8c", // Add brandId here
-                    sourceType: "PROPERTYSEARCHAPPLET", // Optional: Define source type if needed
-                    agencyAgentIds: [], // Add agency agent ids here
-                    borderRadius: "8px" // Set the border radius of search applet
-                  });
-            
-                  assistant.init();
-            
-                  window.addEventListener("search-result", (e) => {
-                    console.log("Third-party received search result:", e.detail); // e.detail provides searched property result
-                  });
-                } else {
-                  console.error("window.Assistant is not defined");
-                }
-              };
-            </script>
   <script src="https://propertycarduqast.z8.web.core.windows.net/aiconcierge.js"></script>
+  
+              <script>
+      window.onload = () => {
+        if (window.Assistant) {
+          const assistant = new Assistant({
+            target: "target-search-applet", // Use this id to render search applet
+            brandId: "196962f3-36e4-433e-b68e-72bcc0c49344", // Add brandId here
+            sourceType: "PROPERTYSEARCHAPPLET", // Optional: Define source type if needed
+            agencyAgentIds: [], // Add agency agent ids here
+            borderRadius: "8px" // Set the border radius of search applet
+          });
+          assistant.init();
+          window.addEventListener("search-start", (e) => {
+            console.log("Third-party received search start:", e.detail);
+          });
+          window.addEventListener("search-result", (e) => {
+            console.log("Third-party received search result:", e.detail); // e.detail provides searched property result
+          });
+        } else {
+          console.error("window.Assistant is not defined");
+        }
+      };
+    </script>
            <script>
       window.addEventListener("load", () => {
         const widget = new PropertyCardWidget({
@@ -408,6 +410,7 @@
   </script>
 </body>
 </html>
+
 
 
 
